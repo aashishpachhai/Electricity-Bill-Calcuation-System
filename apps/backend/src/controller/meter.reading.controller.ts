@@ -14,6 +14,7 @@ export const createMeterReading = async (req: Request, res: Response) => {
     db.insert(meterReadingTable).values({
       meter_reading,
       renter_id,
+      created_at: new Date(),
     }),
     () => new Error("Database Error"),
   );

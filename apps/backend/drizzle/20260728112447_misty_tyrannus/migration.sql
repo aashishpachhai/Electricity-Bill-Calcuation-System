@@ -13,7 +13,8 @@ CREATE TABLE "bills" (
 CREATE TABLE "meter_readings" (
 	"id" serial PRIMARY KEY,
 	"renter_id" integer NOT NULL,
-	"meter_reading" varchar NOT NULL
+	"meter_reading" varchar NOT NULL,
+	"created_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "rate" (

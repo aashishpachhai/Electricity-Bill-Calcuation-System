@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "aba42e29-8ec5-40ec-9472-52f60830d07f",
+  "id": "f018a1f6-a16b-4c83-882a-1a634ddc1438",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -182,6 +182,19 @@
       "generated": null,
       "identity": null,
       "name": "meter_reading",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "meter_readings"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
       "entityType": "columns",
       "schema": "public",
       "table": "meter_readings"
