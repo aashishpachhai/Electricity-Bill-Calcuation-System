@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { fromPromise } from "neverthrow";
 import { db } from "../db/db";
 import { rateTable } from "../models/rate.model";
-import { billsTable } from "../models/bills.model";
+import { billsTable } from "../models/bills.models";
+
 export const createBill = async (req: Request, res: Response) => {
   const { renter_id, billing_month, previous_reading, current_reading } =
     req.body;
