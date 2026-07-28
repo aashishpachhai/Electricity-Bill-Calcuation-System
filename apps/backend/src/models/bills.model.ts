@@ -12,7 +12,7 @@ export const billsTable = pgTable("bills", {
   renter_id: integer()
     .references(() => renterTable.id)
     .notNull(),
-  billing_month: timestamp().notNull(),
+  billing_month: varchar().notNull(),
   previous_reading: varchar().notNull(),
   current_reading: varchar().notNull(),
   units_used: varchar().notNull(),

@@ -1,7 +1,7 @@
 CREATE TABLE "bills" (
 	"id" serial PRIMARY KEY,
 	"renter_id" integer NOT NULL,
-	"billing_month" timestamp NOT NULL,
+	"billing_month" varchar NOT NULL,
 	"previous_reading" varchar NOT NULL,
 	"current_reading" varchar NOT NULL,
 	"units_used" varchar NOT NULL,

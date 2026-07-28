@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "933cab94-1095-413f-849d-01ad6aea6cbf",
+  "id": "aba42e29-8ec5-40ec-9472-52f60830d07f",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -57,7 +57,7 @@
       "table": "bills"
     },
     {
-      "type": "timestamp",
+      "type": "varchar",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
