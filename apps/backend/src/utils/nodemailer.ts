@@ -51,13 +51,13 @@ export const sendRenterMail = async (
     </tr>
 
     <tr>
-      <td>Previous Reading</td>
-      <td align="right">${previousReading}</td>
+      <td>Current Reading</td>
+      <td align="right">${currentReading}</td>
     </tr>
 
     <tr>
-      <td>Current Reading</td>
-      <td align="right">${currentReading}</td>
+      <td>Previous Reading</td>
+      <td align="right">${previousReading}</td>
     </tr>
 
     <tr>
