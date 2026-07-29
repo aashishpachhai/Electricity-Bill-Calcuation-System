@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import "dotenv/config.js";
+import path from "path";
 // Create a transporter using SMTP
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST!,
@@ -19,6 +20,7 @@ export const sendRenterMail = async (
 ) => {
   const currentUnit = Math.abs(currentReading - previousReading);
   const totalAmount = currentUnit * ratePerUnit;
+  const qrPath = path.join(process.cwd(), "src", "images", "qr.jpeg");
   try {
     const info = await transporter.sendMail({
       from: `${process.env.SMTP_USER}`,
@@ -77,9 +79,20 @@ export const sendRenterMail = async (
   </table>
 
   <p style="margin-top:20px;font-family:Arial,sans-serif;">
-    Thank you for your payment.
+    For Payment Please Scan QR
+    <p>
+      <img src="cid:paymentQR" alt="Payment QR Code" width="250" />
+    </p>
   </p>
+  
 `,
+      attachments: [
+        {
+          filename: "qr.jpeg",
+          path: qrPath,
+          cid: "paymentQR",
+        },
+      ],
     });
 
     console.log("Message sent: %s", info.messageId);
