@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { fromPromise } from "neverthrow";
 import { db } from "../db/db";
 import { renterTable } from "../models/renters.model";
+import { eq } from "drizzle-orm";
 export const createRenter = async (req: Request, res: Response) => {
   const { name, room_number, email, phone } = req.body;
   if (!name || !room_number || !email || !phone) {
@@ -59,5 +60,22 @@ export const editRenter = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     message: "Renter updated successfully",
+  });
+};
+
+export const getAllRenter = async (req: Request, res: Response) => {
+  const data = await fromPromise(
+    db.select().from(renterTable).where(eq(renterTable.status, true)),
+    () => new Error("Database Error"),
+  );
+  if (data.isErr()) {
+    return res.status(500).json({
+      success: true,
+      message: data.error.message,
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    data: data.value,
   });
 };
