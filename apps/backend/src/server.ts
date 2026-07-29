@@ -3,6 +3,7 @@ import { billsRouter } from "./routes/bills.routes";
 import { meterReadingRouter } from "./routes/meter.reading.routes";
 import { rateRouter } from "./routes/rate.routes";
 import { renterRouter } from "./routes/renter.routes";
+import "../src/utils/nodemailer";
 
 const app = express();
 

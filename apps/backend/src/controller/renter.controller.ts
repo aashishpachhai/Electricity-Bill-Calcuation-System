@@ -3,6 +3,7 @@ import { fromPromise } from "neverthrow";
 import { db } from "../db/db";
 import { renterTable } from "../models/renters.model";
 import { eq } from "drizzle-orm";
+import { sendRenterMail } from "../utils/nodemailer";
 export const createRenter = async (req: Request, res: Response) => {
   const { name, room_number, email, phone } = req.body;
   if (!name || !room_number || !email || !phone) {
@@ -77,5 +78,13 @@ export const getAllRenter = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     data: data.value,
+  });
+};
+
+export const sendMail = async (req: Request, res: Response) => {
+  await sendRenterMail("nyennhi1901@gmail.com", 222, 111, 15);
+  res.status(200).json({
+    success: true,
+    message: "Mail sent successfully",
   });
 };
