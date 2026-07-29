@@ -82,7 +82,8 @@ export const getAllRenter = async (req: Request, res: Response) => {
 };
 
 export const sendMail = async (req: Request, res: Response) => {
-  await sendRenterMail("nyennhi1901@gmail.com", 222, 111, 15);
+  // await sendRenterMail("nyennhi1901@gmail.com", 222, 111, 15);
+  await sendRenterMail("cheepraew@gmail.com", 222, 111, 15);
   res.status(200).json({
     success: true,
     message: "Mail sent successfully",
