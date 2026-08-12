@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Renter } from "./pages/renter.tsx";
 import { Layout } from "./pages/layout.tsx";
 import { Rate } from "./pages/rate.tsx";
+import { QueryClient, QueryClientProvider } from "react-query";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,8 +23,11 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>,
 );
