@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { fromPromise } from "neverthrow";
 import { db } from "../db/db";
 import { renterTable } from "../models/renters.model";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { sendRenterMail } from "../utils/nodemailer";
 export const createRenter = async (req: Request, res: Response) => {
   const { name, room_number, email, phone } = req.body;
@@ -66,7 +66,11 @@ export const editRenter = async (req: Request, res: Response) => {
 
 export const getAllRenter = async (req: Request, res: Response) => {
   const data = await fromPromise(
-    db.select().from(renterTable).where(eq(renterTable.status, true)),
+    db
+      .select()
+      .from(renterTable)
+      .where(eq(renterTable.status, true))
+      .orderBy(desc(renterTable.room_number)),
     () => new Error("Database Error"),
   );
   if (data.isErr()) {
