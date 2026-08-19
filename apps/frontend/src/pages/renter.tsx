@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-
+import { useForm } from "react-hook-form";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Table } from "../common/table";
 import { useState } from "react";
@@ -18,11 +18,11 @@ export const Renter = () => {
     },
   });
   const [showDialog, setDialog] = useState(false);
-  // const data = [
-  //   { id: 1, firstName: "John", lastName: "Doe", age: 28 },
-  //   { id: 2, firstName: "Jane", lastName: "Smith", age: 34 },
-  //   { id: 3, firstName: "Bob", lastName: "Johnson", age: 42 },
-  // ];
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const columns = [
     columnHelper.accessor("id", {
@@ -61,6 +61,10 @@ export const Renter = () => {
     }),
   ];
 
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
+
   return (
     <div className="p-2 w-screen">
       <h1 className="text-3xl">Renters</h1>
@@ -77,11 +81,15 @@ export const Renter = () => {
               X
             </button>
           </div>
-          <div className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <fieldset className="flex flex-col">
               <label htmlFor="">Full Name</label>
               <input
                 type="text"
+                {...register("fullname")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter Full Name"
               />
@@ -90,6 +98,7 @@ export const Renter = () => {
               <label htmlFor="">Room Number</label>
               <input
                 type="text"
+                {...register("roomNo")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter room number"
               />
@@ -98,6 +107,7 @@ export const Renter = () => {
               <label htmlFor="">Email</label>
               <input
                 type="text"
+                {...register("email")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter Email"
               />
@@ -106,18 +116,20 @@ export const Renter = () => {
               <label htmlFor="Full Name">Phone</label>
               <input
                 type="text"
+                {...register("phoneNumber")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter phone number"
               />
             </fieldset>
 
             <button
+              type="submit"
               className=" p-2 bg-green-300 text-white cursor-pointer"
               onClick={() => setDialog(false)}
             >
               Add
             </button>
-          </div>
+          </form>
         </div>
       </div>
       <div className="flex justify-end my-4">
