@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Table } from "../common/table";
@@ -10,6 +10,7 @@ export const Renter = () => {
     data: allRates,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["getAllRates"],
     queryFn: async () => {
@@ -24,6 +25,20 @@ export const Renter = () => {
     formState: { errors },
   } = useForm();
 
+  const createRenter = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .post("http://localhost:3000/renter", data)
+        .then(() => refetch());
+    },
+  });
+  const deleteRenter = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .delete(`http://localhost:3000/renter/${data}`)
+        .then(() => refetch());
+    },
+  });
   const columns = [
     columnHelper.accessor("id", {
       header: "ID",
@@ -47,12 +62,15 @@ export const Renter = () => {
     }),
     columnHelper.display({
       header: "Action",
-      cell: (info) => (
+      cell: (row) => (
         <div className="flex gap-2">
           <div className="p-2 bg-green-400 text-white rounded-md cursor-pointer">
             Edit
           </div>
-          <div className="p-2 bg-red-400 text-white rounded-md cursor-pointer">
+          <div
+            className="p-2 bg-red-400 text-white rounded-md cursor-pointer"
+            onClick={() => deleteRenter.mutate(row.row.original.id)}
+          >
             {" "}
             Delete
           </div>
@@ -62,7 +80,7 @@ export const Renter = () => {
   ];
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    createRenter.mutate(data);
   };
 
   return (
@@ -89,7 +107,7 @@ export const Renter = () => {
               <label htmlFor="">Full Name</label>
               <input
                 type="text"
-                {...register("fullname")}
+                {...register("name")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter Full Name"
               />
@@ -98,7 +116,7 @@ export const Renter = () => {
               <label htmlFor="">Room Number</label>
               <input
                 type="text"
-                {...register("roomNo")}
+                {...register("room_number")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter room number"
               />
@@ -116,7 +134,7 @@ export const Renter = () => {
               <label htmlFor="Full Name">Phone</label>
               <input
                 type="text"
-                {...register("phoneNumber")}
+                {...register("phone")}
                 className="border-gray-300 p-2 border rounded-md"
                 placeholder="Enter phone number"
               />

@@ -89,3 +89,40 @@ export const sendMail = async (req: Request, res: Response) => {
     message: "Mail sent successfully",
   });
 };
+
+export const deleteRenter = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const renter = await fromPromise(
+    db
+      .select()
+      .from(renterTable)
+      .where(eq(renterTable.id, Number(id))),
+    () => new Error("Database Error"),
+  );
+  if (renter.isErr()) {
+    return res.status(500).json({
+      message: renter.error.message,
+      success: false,
+    });
+  }
+  if (renter.value.length == 0) {
+    return res.status(500).json({
+      message: "Renter doesnt exists",
+      success: false,
+    });
+  }
+  const data = await fromPromise(
+    db.delete(renterTable).where(eq(renterTable.id, Number(id))),
+    () => new Error("Database Error"),
+  );
+  if (data.isErr()) {
+    return res.status(500).json({
+      success: true,
+      message: data.error.message,
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Renter deleted successfully",
+  });
+};
