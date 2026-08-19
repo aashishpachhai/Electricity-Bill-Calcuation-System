@@ -12,13 +12,15 @@ export const Renter = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["getAllRates"],
+    queryKey: ["getAllRenter"],
+    // refetchOnWindowFocus: false,
     queryFn: async () => {
       const res = await axios.get("http://localhost:3000/renter");
       return res.data;
     },
   });
   const [showDialog, setDialog] = useState(false);
+  const [isEdit, setEdit] = useState(false);
   const {
     register,
     handleSubmit,
@@ -64,7 +66,13 @@ export const Renter = () => {
       header: "Action",
       cell: (row) => (
         <div className="flex gap-2">
-          <div className="p-2 bg-green-400 text-white rounded-md cursor-pointer">
+          <div
+            className="p-2 bg-green-400 text-white rounded-md cursor-pointer"
+            onClick={() => {
+              setEdit(true);
+              setDialog(true);
+            }}
+          >
             Edit
           </div>
           <div
@@ -89,12 +97,15 @@ export const Renter = () => {
       <div
         className={` ${showDialog ? "fixed" : "hidden"} fixed inset-0 flex justify-center items-center bg-black/50  bg-red `}
       >
-        <div className="bg-white p-8 flex flex-col w-96">
+        <div className="bg-white p-8 flex flex-col w-96 rounded-md">
           <div className="flex justify-between text-2xl my-4">
-            <h1>Add Renter</h1>
+            <h1>{isEdit ? "Edit Renter" : "Add Renter"}</h1>
             <button
               className="flex justify-end"
-              onClick={() => setDialog(false)}
+              onClick={() => {
+                setDialog(false);
+                setEdit(false);
+              }}
             >
               X
             </button>
@@ -108,7 +119,7 @@ export const Renter = () => {
               <input
                 type="text"
                 {...register("name")}
-                className="border-gray-300 p-2 border rounded-md"
+                className="border-gray-300 p-2 border rounded-md outline-none"
                 placeholder="Enter Full Name"
               />
             </fieldset>
@@ -117,7 +128,7 @@ export const Renter = () => {
               <input
                 type="text"
                 {...register("room_number")}
-                className="border-gray-300 p-2 border rounded-md"
+                className="border-gray-300 p-2 border rounded-md outline-none"
                 placeholder="Enter room number"
               />
             </fieldset>
@@ -126,7 +137,7 @@ export const Renter = () => {
               <input
                 type="text"
                 {...register("email")}
-                className="border-gray-300 p-2 border rounded-md"
+                className="border-gray-300 p-2 border rounded-md outline-none"
                 placeholder="Enter Email"
               />
             </fieldset>
@@ -135,15 +146,30 @@ export const Renter = () => {
               <input
                 type="text"
                 {...register("phone")}
-                className="border-gray-300 p-2 border rounded-md"
+                className="border-gray-300 p-2 border rounded-md outline-none"
                 placeholder="Enter phone number"
               />
             </fieldset>
+            {isEdit && (
+              <fieldset className="flex flex-col">
+                <label htmlFor="">Status</label>
+                <select
+                  name="status"
+                  className="border-gray-300 p-2 border rounded-md outline-none"
+                >
+                  <option value="">Active</option>
+                  <option value="">Inactive</option>
+                </select>
+              </fieldset>
+            )}
 
             <button
               type="submit"
               className=" p-2 bg-green-300 text-white cursor-pointer"
-              onClick={() => setDialog(false)}
+              onClick={() => {
+                setDialog(false);
+                setEdit(false);
+              }}
             >
               Add
             </button>
