@@ -9,10 +9,23 @@ export const Layout = () => {
         <p className="text-white">Electricty Billing System</p>
         <section className="py-10 flex flex-col gap-4">
           <p className="cursor-pointer p-2" onClick={() => navigate("/")}>
-            Renter
+            Dashboard
           </p>
-          <p className="cursor-pointer p-2">Bills</p>
-          <p className="cursor-pointer p-2">Meter Reading</p>
+          <p className="cursor-pointer p-2" onClick={() => navigate("/renter")}>
+            Renters
+          </p>
+          <p
+            className="cursor-pointer p-2"
+            onClick={() => navigate("/record-reading")}
+          >
+            Record Reading
+          </p>
+          <p
+            className="cursor-pointer p-2"
+            onClick={() => navigate("/history")}
+          >
+            History
+          </p>
           <p className="cursor-pointer p-2" onClick={() => navigate("/rate")}>
             Rate
           </p>

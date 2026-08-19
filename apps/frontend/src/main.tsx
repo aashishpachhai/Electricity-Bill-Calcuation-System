@@ -7,18 +7,34 @@ import { Renter } from "./pages/renter.tsx";
 import { Layout } from "./pages/layout.tsx";
 import { Rate } from "./pages/rate.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Dashboard } from "./pages/dashboard.tsx";
+import { History } from "./pages/history.tsx";
+import { RecordReaing } from "./pages/recordReading.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
       {
-        index: true,
+        path: "/renter",
         element: <Renter />,
       },
       {
         path: "/rate",
         element: <Rate />,
+      },
+      {
+        index: true,
+        // path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/history",
+        element: <History />,
+      },
+      {
+        path: "/record-reading",
+        element: <RecordReaing />,
       },
     ],
   },

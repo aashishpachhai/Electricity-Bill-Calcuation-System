@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { Table } from "../common/table";
+import { useState } from "react";
 export const Renter = () => {
   const columnHelper = createColumnHelper();
   const {
@@ -16,7 +17,7 @@ export const Renter = () => {
       return res.data;
     },
   });
-  console.log(allRates);
+  const [showDialog, setDialog] = useState(false);
   // const data = [
   //   { id: 1, firstName: "John", lastName: "Doe", age: 28 },
   //   { id: 2, firstName: "Jane", lastName: "Smith", age: 34 },
@@ -45,11 +46,16 @@ export const Renter = () => {
       cell: (info) => info.getValue(),
     }),
     columnHelper.display({
-      id: "actions",
       header: "Action",
-      cell: () => (
-        <div className="flex">
-          <div className="bg-green-500 rounded-md cursor-pointer">Button</div>
+      cell: (info) => (
+        <div className="flex gap-2">
+          <div className="p-2 bg-green-400 text-white rounded-md cursor-pointer">
+            Edit
+          </div>
+          <div className="p-2 bg-red-400 text-white rounded-md cursor-pointer">
+            {" "}
+            Delete
+          </div>
         </div>
       ),
     }),
@@ -57,16 +63,74 @@ export const Renter = () => {
 
   return (
     <div className="p-2 w-screen">
-      <h1 className="text-3xl mx-4">Renter</h1>
+      <h1 className="text-3xl">Renters</h1>
+      <div
+        className={` ${showDialog ? "fixed" : "hidden"} fixed inset-0 flex justify-center items-center bg-black/50  bg-red `}
+      >
+        <div className="bg-white p-8 flex flex-col w-96">
+          <div className="flex justify-between text-2xl my-4">
+            <h1>Add Renter</h1>
+            <button
+              className="flex justify-end"
+              onClick={() => setDialog(false)}
+            >
+              X
+            </button>
+          </div>
+          <div className="flex flex-col gap-4">
+            <fieldset className="flex flex-col">
+              <label htmlFor="">Full Name</label>
+              <input
+                type="text"
+                className="border-gray-300 p-2 border rounded-md"
+                placeholder="Enter Full Name"
+              />
+            </fieldset>
+            <fieldset className="flex flex-col">
+              <label htmlFor="">Room Number</label>
+              <input
+                type="text"
+                className="border-gray-300 p-2 border rounded-md"
+                placeholder="Enter room number"
+              />
+            </fieldset>
+            <fieldset className="flex flex-col">
+              <label htmlFor="">Email</label>
+              <input
+                type="text"
+                className="border-gray-300 p-2 border rounded-md"
+                placeholder="Enter Email"
+              />
+            </fieldset>
+            <fieldset className="flex flex-col">
+              <label htmlFor="Full Name">Phone</label>
+              <input
+                type="text"
+                className="border-gray-300 p-2 border rounded-md"
+                placeholder="Enter phone number"
+              />
+            </fieldset>
+
+            <button
+              className=" p-2 bg-green-300 text-white cursor-pointer"
+              onClick={() => setDialog(false)}
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-end my-4">
         <button
-          onClick={() => console.log("Clicked Button")}
+          onClick={() => setDialog(true)}
           className="cursor-pointer p-2 bg-black text-white rounded-lg px-4"
         >
           + Add
         </button>
       </div>
-      <Table data={allRates?.data ?? []} columns={columns} />
+      <div className=" overflow-auto">
+        <Table data={allRates?.data ?? []} columns={columns} />
+      </div>
     </div>
   );
 };
