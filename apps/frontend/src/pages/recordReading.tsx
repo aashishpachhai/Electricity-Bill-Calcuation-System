@@ -1,5 +1,7 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation, useQuery } from "react-query";
 
 export const RecordReaing = () => {
   const {
@@ -8,10 +10,50 @@ export const RecordReaing = () => {
     formState: { errors },
     watch,
   } = useForm();
+  const createBills = useMutation({
+    mutationFn: (data) => {
+      return axios.post("http://localhost:3000/bills", data);
+    },
+  });
   const onSubmit = (data: any) => {
-    console.log(data);
+    createBills.mutate({
+      ...data,
+      renter_id: selectedRenter,
+      billing_month: selectedMonth,
+    });
   };
+  const { data: allRates } = useQuery({
+    queryKey: ["getAllRenterName"],
+    // refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:3000/renter");
+      return res.data;
+    },
+  });
 
+  const { data: getRates } = useQuery({
+    queryKey: ["getLatestRate"],
+    // refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:3000/rate/getRate");
+      return res.data;
+    },
+  });
+
+  const [selectedRenter, setSelectedRenter] = useState<number>(1);
+  const [selectedMonth, setSelectedMonth] = useState<string>("Baisakh");
+  const { data: prevReading } = useQuery({
+    queryKey: ["getPrevReadingById"],
+    enabled: Boolean(selectedRenter),
+    // refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const res = await axios.get(
+        `http://localhost:3000/bills/${selectedRenter}`,
+      );
+      return res.data;
+    },
+  });
+  console.log(selectedRenter, "The selected renter");
   return (
     <div className=" flex p-2 w-screen justify-center items-center ">
       <form
@@ -20,13 +62,38 @@ export const RecordReaing = () => {
       >
         <h1 className="text-2xl ">Record Reading</h1>
         <fieldset className="flex flex-col">
+          <label htmlFor="">Month</label>
+          <select
+            name="renter"
+            id=""
+            className="border-gray-300 p-2 border rounded-md outline-none"
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          >
+            <option value="Baisakh">Baisakh</option>;
+            <option value="Jestha">Jestha</option>
+            <option value="Asadh">Asadh</option>
+            <option value="Shrawan">Shrawan</option>
+            <option value="Bhadra">Bhadra</option>
+            <option value="Aswin">Aswin</option>
+            <option value="Kartik">Kartik</option>
+            <option value="Mangsir">Mangsir</option>
+            <option value="Poush">Poush</option>
+            <option value="Magh">Magh</option>
+            <option value="Falgun">Falgun</option>
+            <option value="Chaitra">Chaitra</option>
+          </select>
+        </fieldset>
+        <fieldset className="flex flex-col">
           <label htmlFor="">Renter</label>
           <select
             name="renter"
             id=""
-            className="border-gray-300 p-2 border rounded-md"
+            className="border-gray-300 p-2 border rounded-md outline-none"
+            onChange={(e) => setSelectedRenter(Number(e.target.value))}
           >
-            <option value="">Hello</option>
+            {allRates?.data.map((r: any) => {
+              return <option value={r.id}>{r.name}</option>;
+            })}
           </select>
         </fieldset>
         <fieldset className="flex flex-col">
@@ -34,6 +101,8 @@ export const RecordReaing = () => {
           <input
             type="text"
             {...register("previous_reading")}
+            defaultValue={prevReading?.data?.current_reading}
+            disabled={Boolean(prevReading?.data?.current_reading)}
             className="border-gray-300 p-2 border rounded-md"
             placeholder="Enter rate per unit"
           />
@@ -56,13 +125,13 @@ export const RecordReaing = () => {
           </div>
           <div className="w-full flex justify-between">
             <p>Rate per unit</p>
-            <p>15</p>
+            <p>{getRates?.data.rate_per_unit}</p>
           </div>
           <div className="w-full flex justify-between">
             <p>Amount to be paid</p>
             <p>
               NPR{" "}
-              {15 *
+              {Number(getRates?.data.rate_per_unit) *
                 Math.abs(watch("previous_reading") - watch("current_reading"))}
             </p>
           </div>

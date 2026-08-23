@@ -3,6 +3,7 @@ import { fromPromise } from "neverthrow";
 import { db } from "../db/db";
 import { rateTable } from "../models/rate.model";
 import { billsTable } from "../models/bills.models";
+import { desc, eq } from "drizzle-orm";
 
 export const createBill = async (req: Request, res: Response) => {
   const { renter_id, billing_month, previous_reading, current_reading } =
@@ -66,3 +67,25 @@ export const createBill = async (req: Request, res: Response) => {
 //   rate_per_unit: integer().notNull(),
 //   electricity_bill: varchar().notNull(),
 //   created_at: timestamp().notNull(),
+
+export const getPreviousReadingById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data = await fromPromise(
+    db
+      .select()
+      .from(billsTable)
+      .where(eq(billsTable.id, Number(id)))
+      .orderBy(desc(billsTable.created_at)),
+    () => new Error("Database Error"),
+  );
+  if (data.isErr()) {
+    return res.status(500).json({
+      success: false,
+      message: data.error.message,
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    data: data.value[0],
+  });
+};

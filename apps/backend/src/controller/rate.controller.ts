@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { fromPromise } from "neverthrow";
 import { db } from "../db/db";
 import { rateTable } from "../models/rate.model";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 export const createRate = async (req: Request, res: Response) => {
   const { effective_from, rate_per_unit } = req.body;
   if (!effective_from || !rate_per_unit) {
@@ -114,5 +114,22 @@ export const deleteRate = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     message: "Rate deleted successfully",
+  });
+};
+
+export const getLatestRate = async (req: Request, res: Response) => {
+  const data = await fromPromise(
+    db.select().from(rateTable).orderBy(desc(rateTable.effective_from)),
+    () => new Error("Database Error"),
+  );
+  if (data.isErr()) {
+    return res.status(500).json({
+      success: true,
+      message: data.error.message,
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    data: data.value[0],
   });
 };

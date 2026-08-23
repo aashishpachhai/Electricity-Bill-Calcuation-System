@@ -5,3 +5,4 @@ rateRouter.post("/", rateController.createRate);
 rateRouter.put("/:id", rateController.updateRate);
 rateRouter.get("/", rateController.getAllRate);
 rateRouter.delete("/:id", rateController.deleteRate);
+rateRouter.get("/getRate", rateController.getLatestRate);
