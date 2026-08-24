@@ -3,3 +3,4 @@ import * as billsController from "../controller/bills.controller";
 export const billsRouter: Router = express.Router();
 billsRouter.post("/", billsController.createBill);
 billsRouter.get("/:id", billsController.getPreviousReadingById);
+billsRouter.get("/getBill/:id", billsController.getBillsById);

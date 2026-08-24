@@ -8,9 +8,9 @@ export const Layout = () => {
       <div className="w-80 bg-black text-white p-4 h-screen">
         <p className="text-white">Electricty Billing System</p>
         <section className="py-10 flex flex-col gap-4">
-          <p className="cursor-pointer p-2" onClick={() => navigate("/")}>
+          {/* <p className="cursor-pointer p-2" onClick={() => navigate("/")}>
             Dashboard
-          </p>
+          </p> */}
           <p className="cursor-pointer p-2" onClick={() => navigate("/renter")}>
             Renters
           </p>

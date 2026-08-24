@@ -4,6 +4,7 @@ import { db } from "../db/db";
 import { rateTable } from "../models/rate.model";
 import { billsTable } from "../models/bills.models";
 import { desc, eq } from "drizzle-orm";
+import { renterTable } from "../models/renters.model";
 
 export const createBill = async (req: Request, res: Response) => {
   const { renter_id, billing_month, previous_reading, current_reading } =
@@ -74,7 +75,7 @@ export const getPreviousReadingById = async (req: Request, res: Response) => {
     db
       .select()
       .from(billsTable)
-      .where(eq(billsTable.id, Number(id)))
+      .where(eq(billsTable.renter_id, Number(id)))
       .orderBy(desc(billsTable.created_at)),
     () => new Error("Database Error"),
   );
@@ -87,5 +88,38 @@ export const getPreviousReadingById = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     data: data.value[0],
+  });
+};
+
+export const getBillsById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data = await fromPromise(
+    db
+      .select({
+        id: billsTable.id,
+        renter_id: renterTable.id,
+        name: renterTable.name,
+        billing_month: billsTable.billing_month,
+        previous_reading: billsTable.previous_reading,
+        current_reading: billsTable.current_reading,
+        units_used: billsTable.units_used,
+        rate_per_unit: billsTable.rate_per_unit,
+        electricity_bill: billsTable.electricity_bill,
+      })
+      .from(billsTable)
+      .where(eq(billsTable.renter_id, Number(id)))
+      .leftJoin(renterTable, eq(renterTable.id, billsTable.renter_id))
+      .orderBy(desc(billsTable.created_at)),
+    () => new Error("Database Error"),
+  );
+  if (data.isErr()) {
+    return res.status(500).json({
+      success: false,
+      message: data.error.message,
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    data: data.value,
   });
 };

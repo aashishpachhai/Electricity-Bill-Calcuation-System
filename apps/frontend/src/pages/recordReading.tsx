@@ -19,6 +19,7 @@ export const RecordReaing = () => {
     createBills.mutate({
       ...data,
       renter_id: selectedRenter,
+      previous_reading: prevReading?.data?.current_reading,
       billing_month: selectedMonth,
     });
   };
@@ -40,10 +41,10 @@ export const RecordReaing = () => {
     },
   });
 
-  const [selectedRenter, setSelectedRenter] = useState<number>(1);
+  const [selectedRenter, setSelectedRenter] = useState<number | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string>("Baisakh");
   const { data: prevReading } = useQuery({
-    queryKey: ["getPrevReadingById"],
+    queryKey: ["getPrevReadingById", selectedRenter],
     enabled: Boolean(selectedRenter),
     // refetchOnWindowFocus: false,
     queryFn: async () => {
@@ -69,6 +70,9 @@ export const RecordReaing = () => {
             className="border-gray-300 p-2 border rounded-md outline-none"
             onChange={(e) => setSelectedMonth(e.target.value)}
           >
+            <option value="Select a month" disabled selected>
+              Select a month
+            </option>
             <option value="Baisakh">Baisakh</option>;
             <option value="Jestha">Jestha</option>
             <option value="Asadh">Asadh</option>
@@ -91,6 +95,9 @@ export const RecordReaing = () => {
             className="border-gray-300 p-2 border rounded-md outline-none"
             onChange={(e) => setSelectedRenter(Number(e.target.value))}
           >
+            <option value="Select a renter" disabled selected>
+              Select a renter
+            </option>
             {allRates?.data.map((r: any) => {
               return <option value={r.id}>{r.name}</option>;
             })}

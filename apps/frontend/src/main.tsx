@@ -16,6 +16,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
+        index: true,
         path: "/renter",
         element: <Renter />,
       },
@@ -23,11 +24,11 @@ const router = createBrowserRouter([
         path: "/rate",
         element: <Rate />,
       },
-      {
-        index: true,
-        // path: "/dashboard",
-        element: <Dashboard />,
-      },
+      // {
+      //   index: true,
+      //   // path: "/dashboard",
+      //   element: <Dashboard />,
+      // },
       {
         path: "/history",
         element: <History />,
